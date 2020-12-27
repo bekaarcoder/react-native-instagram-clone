@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Landing from "./components/auth/Landing";
 import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -22,20 +23,52 @@ if (firebase.apps.length === 0) {
 
 const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setLoaded(true);
+        setLoggedIn(true);
+      } else {
+        setLoaded(true);
+        setLoggedIn(false);
+      }
+    });
+  }, [firebase]);
+
+  if (!loaded) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!loggedIn) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Landing">
+          <Stack.Screen
+            name="Landing"
+            component={Landing}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Register" component={Register}></Stack.Screen>
+          <Stack.Screen name="Login" component={Login}></Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Landing">
-        <Stack.Screen
-          name="Landing"
-          component={Landing}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Register" component={Register}></Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Text>User Logged In.</Text>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -45,3 +78,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;
