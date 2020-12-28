@@ -12,6 +12,20 @@ const Register = () => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((user) => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            name: name,
+            email: email,
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         console.log(user);
       })
       .catch((error) => {

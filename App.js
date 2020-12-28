@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./redux/reducers";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Landing from "./components/auth/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import Main from "./components/Main";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -20,6 +25,8 @@ const firebaseConfig = {
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Stack = createStackNavigator();
 
@@ -64,9 +71,9 @@ const App = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>User Logged In.</Text>
-    </View>
+    <Provider store={store}>
+      <Main />
+    </Provider>
   );
 };
 
