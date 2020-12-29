@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
+import "@firebase/firestore";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
@@ -11,6 +12,7 @@ import Landing from "./components/auth/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Main from "./components/Main";
+import Add from "./components/main/Add";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -72,7 +74,16 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <Main />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Main">
+          <Stack.Screen
+            name="Main"
+            component={Main}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Add" component={Add} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 };

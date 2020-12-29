@@ -41,6 +41,7 @@ const Register = () => {
         onChangeText={(email) => setEmail(email)}
       />
       <TextInput
+        secureTextEntry={true}
         placeholder="Password"
         onChangeText={(password) => setPassword(password)}
       />
