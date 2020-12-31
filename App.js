@@ -83,7 +83,7 @@ const App = ({ navigation }) => {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="Add" component={Add} navigation={navigation} />
-          <Stack.Screen name="Save" component={Save} />
+          <Stack.Screen name="Save" component={Save} navigation={navigation} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

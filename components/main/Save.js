@@ -8,6 +8,22 @@ const Save = (props) => {
   const { image } = props.route.params;
   const [caption, setCaption] = useState("");
 
+  const savePostData = (downloadURL) => {
+    firebase
+      .firestore()
+      .collection("posts")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userPosts")
+      .add({
+        image: downloadURL,
+        caption: caption,
+        date_created: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => {
+        props.navigation.popToTop();
+      });
+  };
+
   const uploadImage = async () => {
     const uri = image;
     const response = await fetch(uri);
@@ -31,6 +47,7 @@ const Save = (props) => {
 
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        savePostData(downloadURL);
         console.log(downloadURL);
       });
     };
@@ -44,7 +61,7 @@ const Save = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Image source={{ uri: image }} style={{ flex: 1, aspectRatio: 1 }} />
+      <Image source={{ uri: image }} resizeMode="contain" style={{ flex: 1 }} />
       <TextInput
         placeholder="Write a caption..."
         onChangeText={(caption) => setCaption(caption)}
