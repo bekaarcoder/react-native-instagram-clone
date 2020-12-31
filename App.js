@@ -13,6 +13,7 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Main from "./components/Main";
 import Add from "./components/main/Add";
+import Save from "./components/main/Save";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -32,7 +33,7 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Stack = createStackNavigator();
 
-const App = () => {
+const App = ({ navigation }) => {
   const [loaded, setLoaded] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -81,7 +82,8 @@ const App = () => {
             component={Main}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Add" component={Add} />
+          <Stack.Screen name="Add" component={Add} navigation={navigation} />
+          <Stack.Screen name="Save" component={Save} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

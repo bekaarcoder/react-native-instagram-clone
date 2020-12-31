@@ -6,7 +6,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { fetchUser } from "../redux/actions/index";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
-import { event } from "react-native-reanimated";
 
 const Tab = createBottomTabNavigator();
 
