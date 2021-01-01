@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { fetchUser } from "../redux/actions/index";
+import { fetchUser, fetchUserPosts } from "../redux/actions/index";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
 
@@ -22,6 +22,7 @@ const Main = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
+    dispatch(fetchUserPosts());
   }, [dispatch]);
 
   return (

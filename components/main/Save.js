@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Button, Image, TextInput, View } from "react-native";
 import firebase from "firebase";
 import "@firebase/firestore";
 import "@firebase/storage";
+import { fetchUserPosts } from "../../redux/actions";
 
 const Save = (props) => {
+  const dispatch = useDispatch();
   const { image } = props.route.params;
   const [caption, setCaption] = useState("");
 
@@ -20,6 +23,7 @@ const Save = (props) => {
         date_created: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
+        dispatch(fetchUserPosts());
         props.navigation.popToTop();
       });
   };
