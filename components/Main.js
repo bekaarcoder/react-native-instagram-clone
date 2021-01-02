@@ -6,6 +6,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { fetchUser, fetchUserPosts } from "../redux/actions/index";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
+import Search from "./main/Search";
+import firebase from "firebase";
 
 const Tab = createBottomTabNavigator();
 
@@ -13,7 +15,7 @@ const EmptyScreen = () => {
   return null;
 };
 
-const Main = () => {
+const Main = (props) => {
   const dispatch = useDispatch();
 
   const userState = useSelector((state) => state.userState);
@@ -37,6 +39,16 @@ const Main = () => {
         }}
       />
       <Tab.Screen
+        name="Search"
+        component={Search}
+        navigation={props.navigation}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="magnify" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="AddContainer"
         component={EmptyScreen}
         listeners={({ navigation }) => ({
@@ -54,6 +66,14 @@ const Main = () => {
       <Tab.Screen
         name="Profile"
         component={Profile}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("Profile", {
+              uid: firebase.auth().currentUser.uid,
+            });
+          },
+        })}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
