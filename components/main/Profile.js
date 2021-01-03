@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
+import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import firebase from "firebase";
 import "@firebase/firestore";
 
 const Profile = (props) => {
   const [profile, setProfile] = useState(null);
   const [profilePosts, setProfilePosts] = useState([]);
+  const [userFollowing, setUserFollowing] = useState(false);
 
   const { uid } = props.route.params;
 
   const userState = useSelector((state) => state.userState);
-  const { currentUser, posts } = userState;
+  const { currentUser, posts, following } = userState;
+
+  console.log(following.indexOf(uid));
 
   useEffect(() => {
     if (uid == firebase.auth().currentUser.uid) {
@@ -49,7 +52,34 @@ const Profile = (props) => {
           setProfilePosts(posts);
         });
     }
-  }, [firebase, uid]);
+
+    // check if user is following
+    if (following.indexOf(uid) > -1) {
+      setUserFollowing(true);
+    } else {
+      setUserFollowing(false);
+    }
+  }, [firebase, uid, following]);
+
+  const onFollow = () => {
+    firebase
+      .firestore()
+      .collection("following")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userFollowing")
+      .doc(uid)
+      .set({});
+  };
+
+  const onUnfollow = () => {
+    firebase
+      .firestore()
+      .collection("following")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userFollowing")
+      .doc(uid)
+      .delete();
+  };
 
   if (profile === null) {
     return <View />;
@@ -60,6 +90,15 @@ const Profile = (props) => {
       <View style={styles.containerInfo}>
         <Text>{profile.name}</Text>
         <Text>{profile.email}</Text>
+        {uid !== firebase.auth().currentUser.uid ? (
+          <View>
+            {userFollowing ? (
+              <Button title="Following" onPress={() => onUnfollow()} />
+            ) : (
+              <Button title="Follow" onPress={() => onFollow()} />
+            )}
+          </View>
+        ) : null}
       </View>
       <View style={styles.containerGallery}>
         <FlatList

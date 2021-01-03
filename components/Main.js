@@ -3,7 +3,11 @@ import { StyleSheet, View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { fetchUser, fetchUserPosts } from "../redux/actions/index";
+import {
+  fetchUser,
+  fetchUserFollowing,
+  fetchUserPosts,
+} from "../redux/actions/index";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
 import Search from "./main/Search";
@@ -25,6 +29,7 @@ const Main = (props) => {
   useEffect(() => {
     dispatch(fetchUser());
     dispatch(fetchUserPosts());
+    dispatch(fetchUserFollowing());
   }, [dispatch]);
 
   return (

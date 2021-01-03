@@ -1,5 +1,9 @@
 import firebase from "firebase";
-import { USER_POSTS_STATE_CHANGE, USER_STATE_CHANGE } from "../constants/index";
+import {
+  USER_FOLLOWING_STATE_CHANGE,
+  USER_POSTS_STATE_CHANGE,
+  USER_STATE_CHANGE,
+} from "../constants/index";
 
 export const fetchUser = () => (dispatch) => {
   firebase
@@ -40,6 +44,21 @@ export const fetchUserPosts = () => (dispatch) => {
       dispatch({
         type: USER_POSTS_STATE_CHANGE,
         payload: posts,
+      });
+    });
+};
+
+export const fetchUserFollowing = () => (dispatch) => {
+  firebase
+    .firestore()
+    .collection("following")
+    .doc(firebase.auth().currentUser.uid)
+    .collection("userFollowing")
+    .onSnapshot((snapshot) => {
+      let following = snapshot.docs.map((doc) => doc.id);
+      dispatch({
+        type: USER_FOLLOWING_STATE_CHANGE,
+        payload: following,
       });
     });
 };
