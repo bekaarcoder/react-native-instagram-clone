@@ -1,5 +1,7 @@
 import firebase from "firebase";
 import {
+  USERS_DATA_STATE_CHANGE,
+  USERS_POSTS_STATE_CHANGE,
   USER_FOLLOWING_STATE_CHANGE,
   USER_POSTS_STATE_CHANGE,
   USER_STATE_CHANGE,
@@ -60,5 +62,60 @@ export const fetchUserFollowing = () => (dispatch) => {
         type: USER_FOLLOWING_STATE_CHANGE,
         payload: following,
       });
+
+      // fetch each of the following user's data
+      following.forEach((id) => dispatch(fetchUsersData(id)));
+    });
+};
+
+export const fetchUsersData = (uid) => (dispatch, getState) => {
+  const found = getState().usersState.users.some((user) => user.uid === uid);
+
+  if (!found) {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          let user = doc.data();
+          user.uid = doc.id;
+
+          dispatch({
+            type: USERS_DATA_STATE_CHANGE,
+            payload: user,
+          });
+          dispatch(fetchUsersFollowingPosts(user.uid));
+        } else {
+          console.log("User does not exists.");
+        }
+      });
+  }
+};
+
+export const fetchUsersFollowingPosts = (uid) => (dispatch, getState) => {
+  firebase
+    .firestore()
+    .collection("posts")
+    .doc(uid)
+    .collection("userPosts")
+    .orderBy("date_created", "asc")
+    .get()
+    .then((snapshot) => {
+      const uid = snapshot.query.EP.path.segments[1];
+      const user = getState().usersState.users.find((el) => el.uid === uid);
+
+      let posts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        user: user,
+      }));
+
+      dispatch({
+        type: USERS_POSTS_STATE_CHANGE,
+        payload: { uid, posts },
+      });
+      console.log(getState());
     });
 };
