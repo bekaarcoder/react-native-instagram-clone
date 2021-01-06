@@ -1,4 +1,5 @@
 import {
+  CLEAR_USER_DATA,
   USER_FOLLOWING_STATE_CHANGE,
   USER_POSTS_STATE_CHANGE,
   USER_STATE_CHANGE,
@@ -27,6 +28,8 @@ export const user = (state = initialState, action) => {
         ...state,
         following: action.payload,
       };
+    case CLEAR_USER_DATA:
+      return initialState;
     default:
       return state;
   }

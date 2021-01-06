@@ -1,4 +1,5 @@
 import {
+  CLEAR_USER_DATA,
   USERS_DATA_STATE_CHANGE,
   USERS_POSTS_STATE_CHANGE,
 } from "../constants";
@@ -25,6 +26,8 @@ export const users = (state = initialState, action) => {
             : user
         ),
       };
+    case CLEAR_USER_DATA:
+      return initialState;
     default:
       return state;
   }

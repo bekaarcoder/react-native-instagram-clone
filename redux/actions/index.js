@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import {
+  CLEAR_USER_DATA,
   USERS_DATA_STATE_CHANGE,
   USERS_POSTS_STATE_CHANGE,
   USER_FOLLOWING_STATE_CHANGE,
@@ -118,4 +119,10 @@ export const fetchUsersFollowingPosts = (uid) => (dispatch, getState) => {
       });
       console.log(getState());
     });
+};
+
+export const clearUserData = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_USER_DATA,
+  });
 };

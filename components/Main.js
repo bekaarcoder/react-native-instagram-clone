@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {
+  clearUserData,
   fetchUser,
   fetchUserFollowing,
   fetchUserPosts,
@@ -27,6 +28,7 @@ const Main = (props) => {
   console.log(currentUser);
 
   useEffect(() => {
+    dispatch(clearUserData());
     dispatch(fetchUser());
     dispatch(fetchUserPosts());
     dispatch(fetchUserFollowing());

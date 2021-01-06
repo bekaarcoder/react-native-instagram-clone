@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import firebase from "firebase";
 import "@firebase/firestore";
+import { clearUserData } from "../../redux/actions";
 
 const Profile = (props) => {
   const [profile, setProfile] = useState(null);
   const [profilePosts, setProfilePosts] = useState([]);
   const [userFollowing, setUserFollowing] = useState(false);
+
+  const dispatch = useDispatch();
 
   const { uid } = props.route.params;
 
@@ -81,6 +84,10 @@ const Profile = (props) => {
       .delete();
   };
 
+  const onLogout = () => {
+    firebase.auth().signOut();
+  };
+
   if (profile === null) {
     return <View />;
   }
@@ -98,7 +105,9 @@ const Profile = (props) => {
               <Button title="Follow" onPress={() => onFollow()} />
             )}
           </View>
-        ) : null}
+        ) : (
+          <Button title="Logout" onPress={() => onLogout()} />
+        )}
       </View>
       <View style={styles.containerGallery}>
         <FlatList
