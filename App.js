@@ -14,6 +14,7 @@ import Login from "./components/auth/Login";
 import Main from "./components/Main";
 import Add from "./components/main/Add";
 import Save from "./components/main/Save";
+import Comment from "./components/main/Comment";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -84,6 +85,11 @@ const App = ({ navigation }) => {
           />
           <Stack.Screen name="Add" component={Add} navigation={navigation} />
           <Stack.Screen name="Save" component={Save} navigation={navigation} />
+          <Stack.Screen
+            name="Comment"
+            component={Comment}
+            navigation={navigation}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

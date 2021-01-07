@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, FlatList, Image, StyleSheet, Text, View } from "react-native";
 
-const Feed = () => {
+const Feed = (props) => {
   const [posts, setPosts] = useState([]);
 
   const userState = useSelector((state) => state.userState);
@@ -40,6 +40,16 @@ const Feed = () => {
             <View style={styles.containerImage}>
               <Text style={styles.container}>{item.user.name}</Text>
               <Image source={{ uri: item.image }} style={styles.image} />
+              <Text
+                onPress={() =>
+                  props.navigation.navigate("Comment", {
+                    post_id: item.id,
+                    uid: item.user.uid,
+                  })
+                }
+              >
+                View Comments
+              </Text>
             </View>
           )}
         />
